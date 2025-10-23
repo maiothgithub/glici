@@ -119,15 +119,7 @@ void loop()
       packet.irSensor = sensorValue;
 
       client.write((uint8_t*)&packet, sizeof(packet));
-
       PrintSentData();
-
-      // Optionally read response
-      while (client.available()) {
-        String line = client.readStringUntil('\n');
-        Serial.println("Response: " + line);
-      }
-
       client.stop();  // Close connection after each send
     } else {
       Serial.println("Connection to server failed.");

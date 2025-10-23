@@ -18,7 +18,8 @@ CREATE TABLE IF NOT EXISTS readings (
     timestamp TEXT,
     temperature REAL,
     humidity REAL,
-    sensor INTEGER
+    sensor INTEGER,
+    realsensor INTEGER
 )
 """)
 dbconn.commit()
@@ -39,7 +40,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     while True:
         conn, addr = s.accept()
         with conn:
-            print(f"Connected by {addr}")
+            #print(f"Connected by {addr}")
             data = conn.recv(1024)
             if len(data) == 12:
                 # '<' = little endian, 'ff' = two floats, 'i' = int32
@@ -48,6 +49,4 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 print(f"Temp: {temperature:.2f}, Hum: {humidity:.2f}, IRSensor: {irsensor}")
             else:
                 print(f"Incorrect packet ({len(data)} bytes)")
-            if data:
-                print(f"Received: {data.strip()}")
-                conn.sendall(b"OK\n")
+            conn.close()
